@@ -9,7 +9,7 @@ Raycaster::Raycaster(sf::RenderWindow& window, sf::Sprite& sprite, float& theta,
         m_sliceWidth(static_cast<float>(WIDTH) / m_noOfRays),
         m_verticalAngle(verticalAngle)
     {
-        m_wallTexture.loadFromFile("images/wallTexture.png");
+        m_wallTexture.loadFromFile("../../images/wallTexture.png");
         m_wallTexture.setRepeated(true);
     }
 

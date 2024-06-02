@@ -1,6 +1,7 @@
-.idea
+.idea/
+lib/
+include/SFML/
+bin/
+.vs/
 out
-lib
-include/SFML
-bin
-.vs
+

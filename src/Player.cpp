@@ -10,7 +10,7 @@ Player::Player(sf::RenderWindow& window)
     m_verticalAngle(0),
     mousePos(sf::Mouse::getPosition())
 {
-    m_playerTexture.loadFromFile("../images/MapPlayer16.png");
+    m_playerTexture.loadFromFile("../../images/MapPlayer16.png");
 
     m_playerSprite.setTexture(m_playerTexture);
     m_playerSprite.setScale(m_scaleFactor, m_scaleFactor);
@@ -142,7 +142,7 @@ void Player::run()
     chooseFrame();
     drawFloors();
     m_raycaster.drawRays();
-    m_window.draw(m_playerSprite);
+    // m_window.draw(m_playerSprite);
 }
 
 bool Player::checkMapCollision(float newPosX, float newPosY)
