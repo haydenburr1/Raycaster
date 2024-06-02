@@ -1,2 +1,6 @@
 .idea
 out
+lib
+include/SFML
+bin
+.vs
