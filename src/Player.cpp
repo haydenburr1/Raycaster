@@ -1,4 +1,5 @@
 #include "headers/Player.h"
+#include <filesystem>
 
 Player::Player(sf::RenderWindow& window)
     : m_velocity(7),
@@ -10,6 +11,7 @@ Player::Player(sf::RenderWindow& window)
     m_verticalAngle(0),
     mousePos(sf::Mouse::getPosition())
 {
+    std::cout << "file in: " << std::filesystem::current_path() << std::endl;
     m_playerTexture.loadFromFile("../../images/MapPlayer16.png");
 
     m_playerSprite.setTexture(m_playerTexture);
