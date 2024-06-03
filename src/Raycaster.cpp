@@ -1,15 +1,14 @@
 #include "headers/Raycaster.h"
-#include <iostream>
 
 Raycaster::Raycaster(sf::RenderWindow& window, sf::Sprite& sprite, float& theta, float& verticalAngle)
         : m_window(window),
         m_sprite(sprite),
         m_theta(theta),
-        m_noOfRays(3000),
+        m_noOfRays(500),
         m_sliceWidth(static_cast<float>(WIDTH) / m_noOfRays),
         m_verticalAngle(verticalAngle)
     {
-        m_wallTexture.loadFromFile("../../images/wallTexture.png");
+        //m_wallTexture.loadFromFile();
         m_wallTexture.setRepeated(true);
     }
 
