@@ -1,6 +1,5 @@
 #include "headers/Game.h"
 
-
 Game::Game()
     : m_FPS(60),
       m_window(sf::VideoMode(WIDTH, HEIGHT), "Doom"),
@@ -11,7 +10,7 @@ Game::Game()
     m_window.setFramerateLimit(m_FPS);
 
     // Initialize gun sprite
-    if (!m_gunTexture.loadFromFile("../images/DoomGun.png"))
+    if (!m_gunTexture.loadFromFile("images/DoomGun.png"))
     {
         // Handle loading error
         std::cerr << "Failed to load gun texture." << std::endl;

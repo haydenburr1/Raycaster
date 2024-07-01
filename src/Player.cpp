@@ -11,7 +11,7 @@ Player::Player(sf::RenderWindow& window)
     m_verticalAngle(0),
     mousePos(sf::Mouse::getPosition())
 {
-    m_playerTexture.loadFromFile("../../images/MapPlayer16.png");
+    m_playerTexture.loadFromFile("images/MapPlayer16.png");
 
     m_playerSprite.setTexture(m_playerTexture);
     m_playerSprite.setScale(m_scaleFactor, m_scaleFactor);
