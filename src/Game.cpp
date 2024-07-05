@@ -58,7 +58,7 @@ void Game::initFps()
 
         std::string strFps = "Doom - FPS: " + std::to_string(fps);
 
-        m_window.setTitle("Doom");
+        m_window.setTitle(strFps);
 
         // Reset for the next second
         m_elapsedTime = 0.f;

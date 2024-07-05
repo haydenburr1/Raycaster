@@ -45,15 +45,3 @@ add_custom_command(TARGET Cmake POST_BUILD
         "${CMAKE_SOURCE_DIR}/bin/sfml-window-2.dll"
         "${CMAKE_SOURCE_DIR}/bin/openal32.dll"
         $<TARGET_FILE_DIR:Cmake>)
-
-set(IMAGES
-    "${CMAKE_SOURCE_DIR}/images/wallTexture.png"
-    "${CMAKE_SOURCE_DIR}/images/MapPlayer16.png"
-    #"${CMAKE_SOURCE_DIR}/images/image3.bmp"
-)
-
-# Post-build command to copy images to the output directory
-add_custom_command(TARGET Cmake POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${IMAGES}
-        $<TARGET_FILE_DIR:Cmake>)

@@ -1,6 +1,5 @@
 #include "headers/Player.h"
 #include "headers/Utils.h"
-#define MOUSE_CONTROLS true 
 
 Player::Player(sf::RenderWindow& window)
     : m_velocity(5),
