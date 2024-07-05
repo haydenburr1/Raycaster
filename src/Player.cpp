@@ -1,8 +1,9 @@
 #include "headers/Player.h"
-
+#include "headers/Utils.h"
+#define MOUSE_CONTROLS true 
 
 Player::Player(sf::RenderWindow& window)
-    : m_velocity(7),
+    : m_velocity(5),
     m_scaleFactor(6.0f),
     m_window(window),
     m_theta(0.0f),
@@ -19,11 +20,6 @@ Player::Player(sf::RenderWindow& window)
     m_playerSprite.setOrigin(sf::Vector2f(static_cast<float>(m_playerTexture.getSize().y) / 2.f, static_cast<float>(m_playerTexture.getSize().y) / 2.f));
 }
 
-void Player::draw() const
-{
-    m_window.draw(m_playerSprite);
-}
-
 void Player::chooseFrame()
 {
     float frame_angle = 360.f / (static_cast<float>(m_playerTexture.getSize().x) / m_playerTexture.getSize().y);
@@ -31,7 +27,7 @@ void Player::chooseFrame()
 
     // tank rendering and rotation
     m_playerSprite.setTextureRect(sf::IntRect(m_playerTexture.getSize().y * frame_index, 0, m_playerTexture.getSize().y, m_playerTexture.getSize().y));
-    m_playerSprite.setRotation(-(m_theta * 180 / PI)); 
+    m_playerSprite.setRotation(-(m_theta * 180 / PI));
 }
 
 float Player::wrapTheta()
@@ -47,59 +43,39 @@ float Player::wrapTheta()
 void Player::controls()
 {
     sf::Vector2f futurePos(0.f, 0.f);
-
-    /*float direction_horizontal = 0;
-    float direction_vertical = 0;
-
-    unsigned short window_center_x = static_cast<unsigned short>(round(0.5f * m_window.getSize().x));
-    unsigned short window_center_y = static_cast<unsigned short>(round(0.5f * m_window.getSize().y));
-
-    m_theta = 60.f * -(window_center_x - sf::Mouse::getPosition(m_window).x) / m_window.getSize().x;
-    m_verticalAngle = 60.f * (window_center_y - sf::Mouse::getPosition(m_window).y) / m_window.getSize().y;
-
-    direction_horizontal = get_degrees(direction_horizontal + m_theta);
-    //Putting 90 here breaks the game so I put 89.
-    direction_vertical = std::max(-89.0f, std::min(89.0f, direction_vertical + m_theta));
-
-    //Just so you know, this works even if the window is out of focus.
-    //sf::Mouse::setPosition(sf::Vector2i(window_center_x, window_center_y), m_window);
-
-    */
-
     // Handle keyboard inputs for player rotation and movement
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        m_theta -= 0.05f;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        m_theta += 0.05f;
-    }
 
     // Movement forward (W) and backward (S)
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+    {
         futurePos.x = std::cos(-m_theta) * m_velocity;
         futurePos.y = std::sin(-m_theta) * m_velocity;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+    {
         futurePos.x = -std::cos(-m_theta) * m_velocity;
         futurePos.y = -std::sin(-m_theta) * m_velocity;
     }
 
     // Movement left (Left Arrow) and right (Right Arrow)
-    // 1.5708f is approximately 90 degrees in radians
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        futurePos.x = std::cos(-m_theta + 1.5708f) * m_velocity;
-        futurePos.y = std::sin(-m_theta + 1.5708f) * m_velocity;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    {
+        futurePos.x = std::cos(-m_theta - (90 * (180 / PI))) * m_velocity;
+        futurePos.y = std::sin(-m_theta - (90 * (180 / PI))) * m_velocity;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        futurePos.x = -std::cos(-m_theta + 1.5708f) * m_velocity;
-        futurePos.y = -std::sin(-m_theta + 1.5708f) * m_velocity;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    {
+        futurePos.x = -std::cos(-m_theta - (90 * (180 / PI))) * m_velocity;
+        futurePos.y = -std::sin(-m_theta - (90 * (180 / PI))) * m_velocity;
     }
 
     // Adjust vertical angle with Up and Down arrow keys
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+    {
         m_verticalAngle += m_velocity * 4;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+    {
         m_verticalAngle -= m_velocity * 4;
     }
 
@@ -107,58 +83,105 @@ void Player::controls()
     sf::Vector2f newPosition = m_playerSprite.getPosition() + futurePos;
 
     // Check for collisions and update player position accordingly
-    if (!checkMapCollision(newPosition.x, newPosition.y)) {
+    if (!Utils::checkRayCollisions(newPosition))
+    {
         m_playerSprite.setPosition(newPosition);
     }
+
     else {
-        if (!checkMapCollision(newPosition.x, m_playerSprite.getPosition().y)) {
+        if (!Utils::checkRayCollisions(sf::Vector2f(newPosition.x, m_playerSprite.getPosition().y)))
+        {
             m_playerSprite.setPosition(newPosition.x, m_playerSprite.getPosition().y);
         }
-        if (!checkMapCollision(m_playerSprite.getPosition().x, newPosition.y)) {
+        if (!Utils::checkRayCollisions(sf::Vector2f(m_playerSprite.getPosition().x, newPosition.y)))
+        {
             m_playerSprite.setPosition(m_playerSprite.getPosition().x, newPosition.y);
         }
     }
 
+    collisions(futurePos);
+
     // Ensure angles remain within valid ranges
     wrapTheta();
-    wrapVerticalAngle();
 }
 
-float Player::wrapVerticalAngle()
+void Player::collisions(sf::Vector2f futurePos)
 {
-    if (m_verticalAngle > 1000)
+    sf::Vector2f newPosition = m_playerSprite.getPosition() + futurePos;
+
+    // Check for collisions and update player position accordingly
+    if (!Utils::checkRayCollisions(newPosition))
     {
-        m_verticalAngle = 1000;
+        m_playerSprite.setPosition(newPosition);
     }
-    if (m_verticalAngle < -1000)
+
+    else {
+        if (!Utils::checkRayCollisions(sf::Vector2f(newPosition.x, m_playerSprite.getPosition().y)))
+        {
+            m_playerSprite.setPosition(newPosition.x, m_playerSprite.getPosition().y);
+        }
+        if (!Utils::checkRayCollisions(sf::Vector2f(m_playerSprite.getPosition().x, newPosition.y)))
+        {
+            m_playerSprite.setPosition(m_playerSprite.getPosition().x, newPosition.y);
+        }
+    }
+}
+
+void Player::mouseControls()
+{
+    sf::Vector2f futurePos(0.f, 0.f);
+    // Get the current mouse position relative to the window
+    sf::Vector2i mouseCurrentPos = sf::Mouse::getPosition(m_window);
+    sf::Vector2i windowCenter = sf::Vector2i(static_cast<float>(WIDTH / 2), static_cast<float>(HEIGHT / 2.f));
+
+    // Calculate the change in mouse position (delta)
+    sf::Vector2i mouseDelta = mouseCurrentPos - windowCenter;
+
+    // Update theta and verticalAngle based on mouse movement
+    m_theta += 0.002f * mouseDelta.x;  // Sensitivity factor for horizontal rotation
+    m_verticalAngle += 0.002f * mouseDelta.y;  // Sensitivity factor for vertical rotation
+
+    // Keep vertical angle within a certain range
+    //m_verticalAngle = std::max(-1.57f, std::min(1.57f, m_verticalAngle));  // -90 to +90 degrees in radians
+
+    // Reset mouse position to the center of the window
+    sf::Mouse::setPosition(windowCenter, m_window);
+}
+
+void Player::buttonControls()
+{
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
-        m_verticalAngle = -1000;
+        m_theta -= 0.05f;
     }
-    return m_verticalAngle;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    {
+        m_theta += 0.05f;
+    }
 }
 
 void Player::run()
 {
     controls();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+    {
+        buttonControls();
+    }
+    else
+    {
+        mouseControls();
+    }
+
     //chooseFrame();
     drawFloors();
     m_raycaster.drawRays();
-    // m_window.draw(m_playerSprite);
+#if FLAT
+    m_window.draw(m_playerSprite);
+#endif
 }
 
-bool Player::checkMapCollision(float newPosX, float newPosY)
-{
-    int gridX = static_cast<int>(newPosX / GRID_SIZE);
-    int gridY = static_cast<int>(newPosY / GRID_SIZE);
-
-    if (gridX < 0 || gridY < 0 || gridX >= MAP_WIDTH || gridY >= MAP_HEIGHT)
-    {
-        return true;
-    }
-
-    return map[gridY][gridX] == 1;
-}
-
+// TODO
 void Player::drawFloors()
 {
+
 }

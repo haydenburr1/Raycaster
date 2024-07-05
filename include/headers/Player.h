@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Globals.h"
 #include "Raycaster.h"
+#include <SFML/Graphics.hpp>
 
 class Player {
 public:
@@ -10,11 +11,12 @@ public:
     void run();
 
 private:
-    bool checkMapCollision(float newPosX, float newPosY);
-    void draw() const;
     void chooseFrame();
     float wrapTheta();
     void controls();
+    void collisions(sf::Vector2f futurePos);
+    void mouseControls();
+    void buttonControls();
     void drawFloors();
     float wrapVerticalAngle();
 

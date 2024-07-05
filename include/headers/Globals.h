@@ -1,7 +1,7 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include <array>
 
+#define FLAT 0
 
 extern const int WIDTH;
 extern const int HEIGHT;
@@ -18,3 +18,5 @@ extern const std::array<std::array<int, 15>, 9>  LEVEL_2;
 extern std::array<std::array<int, 15>, 9> map;
 
 extern const float PI;
+
+

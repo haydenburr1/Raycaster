@@ -1,5 +1,6 @@
 #include "headers/Globals.h"
 
+
 const int WIDTH = 3000;
 const int HEIGHT = 1800;
 
@@ -8,7 +9,7 @@ const int GRID_SIZE = 200;
 const int MAP_WIDTH = WIDTH / GRID_SIZE;
 const int MAP_HEIGHT = HEIGHT / GRID_SIZE;
 
-const std::array<std::array<int, 15>, 9>  LEVEL_1= { {
+const std::array<std::array<int, 15>, 9>  LEVEL_1 = { {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     {1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
     {1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1},
@@ -23,7 +24,7 @@ const std::array<std::array<int, 15>, 9>  LEVEL_1= { {
 const std::array<std::array<int, 15>, 9> LEVEL_2 = { {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
-    {1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1},
+    {1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1},
     {1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1},
